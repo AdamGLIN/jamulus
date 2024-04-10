@@ -746,17 +746,20 @@ void CConnectDlg::OnDeleteServerAddrClicked()
         return;
     }
 
-    // move later items down one
-    for ( int iLEIdx = 0; iLEIdx < MAX_NUM_SERVER_ADDR_ITEMS - 1; iLEIdx++ )
+    int iLEIdx = 0;
+
+    // search for the index of the current server address
+    while ( iLEIdx < MAX_NUM_SERVER_ADDR_ITEMS - 1 && !pSettings->vstrIPAddress[iLEIdx].compare ( cbxServerAddr->currentText() ) )
     {
-        while ( pSettings->vstrIPAddress[iLEIdx].compare ( cbxServerAddr->currentText() ) == 0 )
-        {
-            for ( int jLEIdx = iLEIdx + 1; jLEIdx < MAX_NUM_SERVER_ADDR_ITEMS; jLEIdx++ )
-            {
-                pSettings->vstrIPAddress[jLEIdx - 1] = pSettings->vstrIPAddress[jLEIdx];
-            }
-        }
+        iLEIdx++;
     }
+
+    // move later items down one
+    for ( int jLEIdx = iLEIdx + 1; jLEIdx < MAX_NUM_SERVER_ADDR_ITEMS; jLEIdx++ )
+    {
+        pSettings->vstrIPAddress[jLEIdx - 1] = pSettings->vstrIPAddress[jLEIdx];
+    }
+
     // empty last entry
     pSettings->vstrIPAddress[MAX_NUM_SERVER_ADDR_ITEMS - 1] = QString();
 
